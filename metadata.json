@@ -1,0 +1,8 @@
+{
+  "name": "Parshv Foods",
+  "description": "Premium fresh farm produce delivery with custom quantity selection and direct WhatsApp checkout support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

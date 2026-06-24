@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --color-primary: #2E7D32;
+  --color-primary-light: #EAF6EA;
+  --color-accent: #FFA000;
+  --color-page-bg: #F7F7F7;
+  --color-card-border: #C8EBC8;
+  --color-wa-green: #25D366;
+  --color-wa-teal: #128C7E;
+  --color-success-green: #34C35A;
+}
+
+/* Base resets & custom scrollbar styling */
+body {
+  background-color: var(--color-page-bg);
+  color: #1F2937;
+  font-family: var(--font-sans);
+}
+
+/* Hide scrollbar for category filter chip row */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
