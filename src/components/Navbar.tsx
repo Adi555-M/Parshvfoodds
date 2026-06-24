@@ -23,7 +23,7 @@ export default function Navbar({
   return (
     <div id="pf-header" className="sticky top-0 z-50 w-full select-none">
       {/* 1. TOP ANNOUNCEMENT BAR */}
-      <div className="w-full bg-[#FFA000] text-white py-2.5 px-4 text-center text-xs sm:text-sm font-semibold tracking-wide flex items-center justify-center gap-1 leading-tight shadow-sm">
+      <div className="w-full bg-[#FFA500] text-black py-2.5 px-4 text-center text-xs sm:text-sm font-semibold tracking-wide flex items-center justify-center gap-1 leading-tight shadow-sm">
         <span>Free delivery on all orders! Order before 10PM And get order next day morning (8-11 AM)</span>
       </div>
 
@@ -48,7 +48,7 @@ export default function Navbar({
             >
               <ShoppingBag className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#FFA000] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md animate-pulse">
+                <span className="absolute -top-1 -right-1 bg-[#FFA500] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md animate-pulse">
                   {cartCount}
                 </span>
               )}
@@ -58,7 +58,7 @@ export default function Navbar({
             <button
               onClick={onProfileClick}
               className={`w-10 h-10 border flex items-center justify-center transition-all cursor-pointer active:scale-95 rounded-xl ${
-                isProfileFilled ? 'border-[#FFA000] bg-[#FFA000]/20 text-[#FFA000]' : 'border-white/30 bg-white/10 hover:bg-white/20 text-white'
+                isProfileFilled ? 'border-[#FFA500] bg-[#FFA500]/20 text-[#FFA500]' : 'border-white/30 bg-white/10 hover:bg-white/20 text-white'
               }`}
               aria-label="Edit Profile"
             >
