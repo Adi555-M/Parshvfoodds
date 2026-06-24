@@ -122,10 +122,7 @@ export default function ProductCard({
       style={{ backgroundColor: product.bgColor }}
       className="p-5 rounded-2xl border border-gray-200/80 flex flex-col justify-between shadow-xs w-full h-full relative overflow-hidden transition-all duration-300 hover:shadow-md select-none"
     >
-      {/* Badge (Top-Right) */}
-      <span className="absolute top-4 right-4 bg-white/90 border border-gray-200 text-[#2E7D32] px-2.5 py-0.5 rounded-full text-[10px] font-semibold shadow-xs">
-        {product.badge}
-      </span>
+
 
       {/* Vegetable Icon Illustration Wrapper (Curved Circular Stamps) */}
       <div className="flex justify-center items-center py-4">

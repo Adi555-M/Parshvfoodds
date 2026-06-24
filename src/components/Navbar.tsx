@@ -23,7 +23,7 @@ export default function Navbar({
   return (
     <div id="pf-header" className="sticky top-0 z-50 w-full select-none">
       {/* 1. TOP ANNOUNCEMENT BAR */}
-      <div className="w-full bg-[#FFA500] text-black py-2.5 px-4 text-center text-xs sm:text-sm font-semibold tracking-wide flex items-center justify-center gap-1 leading-tight shadow-sm">
+      <div className="w-full bg-[#FF9800] text-black py-2.5 px-4 text-center text-xs sm:text-sm font-semibold tracking-wide flex items-center justify-center gap-1 leading-tight shadow-sm">
         <span>Free delivery on all orders! Order before 10PM And get order next day morning (8-11 AM)</span>
       </div>
 
