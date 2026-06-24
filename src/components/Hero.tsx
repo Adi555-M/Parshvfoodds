@@ -20,7 +20,7 @@ export default function Hero({ onOrderNowClick }: HeroProps) {
           
           {/* Abstract organic visual accents with soft rounded shapes */}
           <div className="absolute top-0 left-0 w-24 h-24 bg-green-200/20 -translate-x-6 -translate-y-6 pointer-events-none rounded-full" />
-          <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#FFA500]/10 translate-x-8 translate-y-8 pointer-events-none rounded-full" />
+          <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#FF9800]/10 translate-x-8 translate-y-8 pointer-events-none rounded-full" />
 
           {/* Circular Logo Badge (Perfect match with the uploaded screenshot) */}
           <motion.div
@@ -75,7 +75,7 @@ export default function Hero({ onOrderNowClick }: HeroProps) {
           >
             <button
               onClick={onOrderNowClick}
-              className="px-10 py-3.5 bg-[#FFA500] hover:bg-[#E69500] text-white font-bold text-sm tracking-wide shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer rounded-xl"
+              className="px-10 py-3.5 bg-[#FF9800] hover:bg-[#F57C00] text-white font-bold text-sm tracking-wide shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer rounded-xl"
             >
               Order Now
             </button>

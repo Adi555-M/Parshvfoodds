@@ -48,7 +48,7 @@ export default function Navbar({
             >
               <ShoppingBag className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#FFA500] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md animate-pulse">
+                <span className="absolute -top-1 -right-1 bg-[#FF9800] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md animate-pulse">
                   {cartCount}
                 </span>
               )}
@@ -58,7 +58,7 @@ export default function Navbar({
             <button
               onClick={onProfileClick}
               className={`w-10 h-10 border flex items-center justify-center transition-all cursor-pointer active:scale-95 rounded-xl ${
-                isProfileFilled ? 'border-[#FFA500] bg-[#FFA500]/20 text-[#FFA500]' : 'border-white/30 bg-white/10 hover:bg-white/20 text-white'
+                isProfileFilled ? 'border-[#FF9800] bg-[#FF9800]/20 text-[#FF9800]' : 'border-white/30 bg-white/10 hover:bg-white/20 text-white'
               }`}
               aria-label="Edit Profile"
             >

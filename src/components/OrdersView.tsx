@@ -167,7 +167,7 @@ export default function OrdersView({
 
               <button
                 onClick={onBrowseHome}
-                className="mt-4 px-6 py-3 bg-[#FFA500] hover:bg-[#E69500] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer rounded-xl shadow-md active:scale-95"
+                className="mt-4 px-6 py-3 bg-[#FF9800] hover:bg-[#F57C00] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer rounded-xl shadow-md active:scale-95"
               >
                 Place Your First Order
               </button>
