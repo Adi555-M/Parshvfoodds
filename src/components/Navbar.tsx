@@ -33,7 +33,7 @@ export default function Navbar({
         {/* Brand Title Row with Cart & Profile controls */}
         <div className="w-full flex items-center justify-between max-w-7xl mx-auto md:px-4">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveTab('home')}>
-            <span className="text-2xl">🌱</span>
+            <span className="text-2xl">🌿</span>
             <span className="font-bold text-white text-xl sm:text-2xl tracking-tight">
               Parshv Foods
             </span>
