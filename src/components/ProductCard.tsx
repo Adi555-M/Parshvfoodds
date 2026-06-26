@@ -111,6 +111,9 @@ export default function ProductCard({
   };
 
   const getPriceLabel = () => {
+    if (product.isMarketPrice) {
+      return "Market Price (બજાર ભાવ)";
+    }
     if (product.id === '5') {
       return `₹${product.price}/dozen (₹250/kg)`;
     }
@@ -217,7 +220,7 @@ export default function ProductCard({
       <div className="mt-3 flex items-center justify-between text-xs px-1 select-none">
         <span className="text-gray-400 font-medium tracking-wider text-[10px]">LIVE COST</span>
         <span className="text-sm text-[#2E7D32] font-bold">
-          ₹{liveCost.toFixed(2)}
+          {product.isMarketPrice ? "Market Price" : `₹${liveCost.toFixed(2)}`}
         </span>
       </div>
 

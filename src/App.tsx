@@ -186,8 +186,12 @@ export default function App() {
         rowCost = quantityNum * product.price;
       }
 
+      const rowCostLabel = product.isMarketPrice
+        ? 'Market Price (બજાર ભાવ)'
+        : `₹${rowCost.toFixed(2)}`;
+
       cropsLines.push(
-        `🌿 ${product.gujaratiName} (${product.englishName}) - ${quantityNum} ${unit} - ₹${rowCost.toFixed(2)}`
+        `🌿 ${product.gujaratiName} (${product.englishName}) - ${quantityNum} ${unit} - ${rowCostLabel}`
       );
 
       orderedHistoryItems.push({
@@ -231,6 +235,16 @@ export default function App() {
     }
 
     // 2. Format final precompiled text message
+    const hasMarketPriceItems = Object.entries(cart).some(([id, qty]) => {
+      if ((qty as number) <= 0) return false;
+      const product = PRODUCTS.find((p) => p.id === id);
+      return product?.isMarketPrice || false;
+    });
+
+    const totalCostLabel = hasMarketPriceItems
+      ? `₹${cartItemSummary.grandRupeeTotal.toFixed(2)} + Market Price items (to be calculated on actual rate at delivery)`
+      : `₹${cartItemSummary.grandRupeeTotal.toFixed(2)}`;
+
     const lines = [
       'Hello Parshv Foods! 🌿',
       '',
@@ -242,7 +256,7 @@ export default function App() {
       '*Order Details:*',
       ...cropsLines,
       '',
-      `*Total Cost: ₹${cartItemSummary.grandRupeeTotal.toFixed(2)}*`,
+      `*Total Cost: ${totalCostLabel}*`,
       'Delivery Handling Fee: FREE 🚚',
       'Payment Mode: Cash / Scan UPI on delivery',
       '',

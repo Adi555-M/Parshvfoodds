@@ -135,7 +135,10 @@ export default function OrdersView({
                   <div className="flex items-center justify-between border-t border-gray-150 pt-2.5 mt-1">
                     <div className="text-xs">
                       <span className="text-gray-400 uppercase font-bold mr-1">Paid:</span>
-                      <span className="text-sm font-bold text-[#2E7D32]">₹{order.totalCost.toFixed(2)}</span>
+                      <span className="text-sm font-bold text-[#2E7D32]">
+                        ₹{order.totalCost.toFixed(2)}
+                        {order.items.some(item => products.find(p => p.id === item.productId)?.isMarketPrice) ? ' + Market Price' : ''}
+                      </span>
                     </div>
 
                     <button

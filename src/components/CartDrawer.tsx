@@ -156,8 +156,9 @@ export default function CartDrawer({
             ) : (
               orderItems.map((item) => {
                 const itemCost = getItemCost(item);
-                const priceLabel =
-                  item.product.id === '5'
+                const priceLabel = item.product.isMarketPrice
+                  ? 'Market Price'
+                  : item.product.id === '5'
                     ? item.unit === 'KG'
                       ? '₹250/kg'
                       : `₹${item.product.price}/dozen`
@@ -243,7 +244,7 @@ export default function CartDrawer({
                     {/* Price total */}
                     <div className="pl-3.5 text-right flex-shrink-0 min-w-[50px]">
                       <span className="text-xs font-semibold text-[#2E7D32]">
-                        ₹{itemCost.toFixed(2)}
+                        {item.product.isMarketPrice ? "Market Price" : `₹${itemCost.toFixed(2)}`}
                       </span>
                     </div>
                   </motion.div>
@@ -259,7 +260,10 @@ export default function CartDrawer({
           <div className="bg-gray-50 p-4 border border-gray-150 flex flex-col gap-2 shadow-xs text-xs select-none rounded-2xl font-bold">
             <div className="flex justify-between items-center text-gray-400 font-semibold uppercase tracking-wider">
               <span>Items Total:</span>
-              <span className="text-gray-800 font-mono">₹{itemsTotal.toFixed(2)}</span>
+              <span className="text-gray-800 font-mono">
+                ₹{itemsTotal.toFixed(2)}
+                {orderItems.some((item) => item.product.isMarketPrice) ? ' + Market Price' : ''}
+              </span>
             </div>
             <div className="flex justify-between items-center text-[11px] text-gray-400 font-bold tracking-wider uppercase">
               <span>Delivery Charge:</span>
@@ -270,9 +274,16 @@ export default function CartDrawer({
               <span className="text-gray-800 font-bold uppercase tracking-wide">GRAND TOTAL:</span>
               <span className="text-base text-orange-600 font-bold font-mono">
                 ₹{grandTotal.toFixed(2)}
+                {orderItems.some((item) => item.product.isMarketPrice) ? ' + Market Price' : ''}
               </span>
             </div>
           </div>
+
+          {orderItems.some((item) => item.product.isMarketPrice) && (
+            <div className="text-[10px] text-orange-600 font-semibold text-center italic mt-[-8px] px-2 leading-tight">
+              * Market price items will be billed on actual daily rate at delivery
+            </div>
+          )}
 
           {/* AMBER ADVISORY BANNER - Curved edges */}
           <div className="bg-amber-50/70 border border-amber-200/50 p-3.5 flex items-start gap-2.5 rounded-2xl">

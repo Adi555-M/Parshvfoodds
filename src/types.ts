@@ -10,6 +10,7 @@ export interface Product {
   emoji: string;
   bgColor: string;
   benefit?: string;
+  isMarketPrice?: boolean;
 }
 
 export interface Profile {
