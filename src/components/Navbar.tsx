@@ -32,8 +32,10 @@ export default function Navbar({
         
         {/* Brand Title Row with Cart & Profile controls */}
         <div className="w-full flex items-center justify-between max-w-7xl mx-auto md:px-4">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveTab('home')}>
-            <span className="text-2xl sm:text-3xl leading-none">🍀</span>
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('home')}>
+            <div className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 bg-white/15 border-2 border-white/40 rounded-xl shadow-inner hover:bg-white/25 hover:border-white/60 transition-all">
+              <span className="text-xl sm:text-2xl leading-none">🍀</span>
+            </div>
             <span className="font-bold text-white text-xl sm:text-2xl tracking-tight">
               Parshv Foods
             </span>
