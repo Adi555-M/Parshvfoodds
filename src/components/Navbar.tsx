@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Info, Mail, RotateCcw, ShoppingBag, User } from 'lucide-react';
+import { Home, Info, Leaf, Mail, RotateCcw, ShoppingBag, User } from 'lucide-react';
 
 interface NavbarProps {
   cartCount: number;
@@ -33,7 +33,7 @@ export default function Navbar({
         {/* Brand Title Row with Cart & Profile controls */}
         <div className="w-full flex items-center justify-between max-w-7xl mx-auto md:px-4">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveTab('home')}>
-            <span className="text-2xl">🌿</span>
+            <Leaf className="w-6 h-6 sm:w-7 sm:h-7 text-white fill-white" />
             <span className="font-bold text-white text-xl sm:text-2xl tracking-tight">
               Parshv Foods
             </span>
