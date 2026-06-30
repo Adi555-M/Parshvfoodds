@@ -17,10 +17,6 @@ export default function Hero({ onOrderNowClick }: HeroProps) {
         
         {/* Inner container with light green background and rounded corners */}
         <div className="w-full bg-[#EAF6EA]/70 border border-[#C8EBC8]/30 px-6 py-12 md:py-16 flex flex-col items-center text-center relative overflow-hidden rounded-[1.5rem]">
-          
-          {/* Abstract organic visual accents with soft rounded shapes */}
-          <div className="absolute top-0 left-0 w-24 h-24 bg-green-200/20 -translate-x-6 -translate-y-6 pointer-events-none rounded-full" />
-          <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#FF9800]/10 translate-x-8 translate-y-8 pointer-events-none rounded-full" />
 
           {/* Circular Logo Badge (Perfect match with the uploaded screenshot) */}
           <motion.div
