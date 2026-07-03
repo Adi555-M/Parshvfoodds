@@ -411,35 +411,50 @@ export default function App() {
           />
         </div>
 
-        {/* [L] Interactive Floating Basket widget (Completely square styled) */}
+        {/* [L] Interactive Floating Basket widget (Optimized and highly polished) */}
         <AnimatePresence>
           {cartItemSummary.distinctTypes > 0 && !isCartOpen && activeTab !== 'orders' && (
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 30 }}
-              className="fixed bottom-4 left-4 right-4 z-40 max-w-sm mx-auto pointer-events-auto select-none"
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 30, scale: 0.95 }}
+              whileHover={{ scale: 1.02 }}
+              className="fixed bottom-4 left-4 right-4 z-40 max-w-md mx-auto pointer-events-auto select-none"
             >
               <div
                 onClick={() => setIsCartOpen(true)}
-                className="bg-[#2E7D32] hover:bg-emerald-700 text-white rounded-2xl px-4 py-3.5 flex items-center justify-between shadow-xl cursor-pointer active:scale-[0.98] transition-all border border-green-700/50"
+                className="bg-[#2E7D32] hover:bg-[#1B5E20] text-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_12px_30px_rgba(46,125,50,0.35)] cursor-pointer active:scale-[0.98] transition-all border border-green-700/50"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-white/10 flex items-center justify-center text-white rounded-xl">
-                    <ShoppingBag className="w-4.5 h-4.5 text-white" />
+                {/* Main Row: Cart status & Price */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-white/10 flex items-center justify-center text-white rounded-xl shadow-inner">
+                      <ShoppingBag className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="text-left">
+                      <span className="text-[10px] text-green-100 font-bold uppercase tracking-wider block">
+                        {cartItemSummary.distinctTypes} {cartItemSummary.distinctTypes === 1 ? 'vegetable' : 'vegetables'} selected
+                      </span>
+                      <span className="text-xs uppercase tracking-wider block font-black text-white mt-0.5">
+                        View Basket
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-left font-bold">
-                    <span className="text-[10px] text-green-150 block uppercase tracking-wide">
-                      {cartItemSummary.distinctTypes} {cartItemSummary.distinctTypes === 1 ? 'vegetable' : 'vegetables'} selected
-                    </span>
-                    <span className="text-xs uppercase tracking-wider block font-black text-white">
-                      View Basket
-                    </span>
+                  
+                  <div className="flex items-center gap-2 font-bold text-white pr-1">
+                    <span className="text-lg font-black tracking-tight">₹{cartItemSummary.grandRupeeTotal.toFixed(2)}</span>
+                    <ArrowRight className="w-4.5 h-4.5 text-white" />
                   </div>
                 </div>
-                <div className="flex items-center gap-2 font-black">
-                  <span className="text-sm font-black">₹{cartItemSummary.grandRupeeTotal.toFixed(2)}</span>
-                  <ArrowRight className="w-4 h-4 text-white" />
+
+                {/* Separator line */}
+                <div className="h-[1px] bg-white/10" />
+
+                {/* Bottom Row: Custom Gujarati Banner with No Hand Signs */}
+                <div className="text-center">
+                  <span className="text-xs font-bold text-green-50 tracking-wide block leading-normal">
+                    તમારો order Parshv Food's ને મોકલવા અહીંયા ક્લિક કરો.
+                  </span>
                 </div>
               </div>
             </motion.div>
