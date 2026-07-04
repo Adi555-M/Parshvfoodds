@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingBag, ArrowRight, ShoppingCart } from 'lucide-react';
+import { ShoppingBag, ArrowRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 // Modular files imports
@@ -27,39 +27,6 @@ export default function App() {
   
   const [isCartOpen, setIsCartOpen] = React.useState(false);
   const [isProfileOpen, setIsProfileOpen] = React.useState(false);
-
-  // Scroll detection to toggle visibility of floating basket widget at the end of the vegetable list
-  const [isBottomVisible, setIsBottomVisible] = React.useState(false);
-  const bottomRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    setIsBottomVisible(false);
-  }, [activeTab]);
-
-  React.useEffect(() => {
-    if (activeTab !== 'home') return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsBottomVisible(entry.isIntersecting);
-      },
-      {
-        root: null,
-        threshold: 0.05, // Trigger when even a tiny bit of the sentinel/button area is in viewport
-      }
-    );
-
-    const currentRef = bottomRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, [activeTab]);
 
   // Load profile details from client-side local storage safely on load
   const [profile, setProfile] = React.useState<Profile>(() => {
@@ -379,9 +346,6 @@ export default function App() {
                       ))
                     )}
                   </div>
-
-                  {/* Sentinel container for scroll detection at the bottom */}
-                  <div ref={bottomRef} className="w-full h-4" />
                 </main>
               </motion.div>
             )}
@@ -449,7 +413,7 @@ export default function App() {
 
         {/* [L] Interactive Floating Basket widget (Optimized and highly polished) */}
         <AnimatePresence>
-          {cartItemSummary.distinctTypes > 0 && !isCartOpen && activeTab !== 'orders' && !isBottomVisible && (
+          {cartItemSummary.distinctTypes > 0 && !isCartOpen && activeTab !== 'orders' && (
             <motion.div
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
