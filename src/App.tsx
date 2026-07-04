@@ -380,20 +380,8 @@ export default function App() {
                     )}
                   </div>
 
-                  {/* Sentinel container for static orange button / scroll detection */}
-                  <div ref={bottomRef} className="w-full">
-                    {cartItemSummary.distinctTypes > 0 && (
-                      <div className="mt-8 mb-4 max-w-sm mx-auto px-4">
-                        <button
-                          onClick={() => setIsCartOpen(true)}
-                          className="w-full bg-[#FF9800] hover:bg-[#F57C00] text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2.5 shadow-[0_4px_15px_rgba(255,152,0,0.35)] active:scale-[0.98] transition-all cursor-pointer border border-[#FFB74D]/30 text-sm tracking-wide"
-                        >
-                          <ShoppingCart className="w-4.5 h-4.5 text-white" />
-                          <span>View Your Order</span>
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  {/* Sentinel container for scroll detection at the bottom */}
+                  <div ref={bottomRef} className="w-full h-4" />
                 </main>
               </motion.div>
             )}
