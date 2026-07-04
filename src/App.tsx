@@ -423,27 +423,27 @@ export default function App() {
             >
               <div
                 onClick={() => setIsCartOpen(true)}
-                className="bg-[#2E7D32] hover:bg-[#1B5E20] text-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_12px_30px_rgba(46,125,50,0.35)] cursor-pointer active:scale-[0.98] transition-all border border-green-700/50"
+                className="bg-[#2E7D32] hover:bg-[#1B5E20] text-white rounded-xl py-2.5 px-3 flex flex-col gap-1.5 shadow-[0_10px_25px_rgba(46,125,50,0.3)] cursor-pointer active:scale-[0.98] transition-all border border-green-700/50"
               >
                 {/* Main Row: Cart status & Price */}
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-white/10 flex items-center justify-center text-white rounded-xl shadow-inner">
-                      <ShoppingBag className="w-5 h-5 text-white" />
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8.5 h-8.5 bg-white/10 flex items-center justify-center text-white rounded-lg shadow-inner shrink-0">
+                      <ShoppingBag className="w-4 h-4 text-white" />
                     </div>
                     <div className="text-left">
-                      <span className="text-[10px] text-green-100 font-bold uppercase tracking-wider block">
+                      <span className="text-[9px] text-green-100 font-bold uppercase tracking-wider block leading-none">
                         {cartItemSummary.distinctTypes} {cartItemSummary.distinctTypes === 1 ? 'vegetable' : 'vegetables'} selected
                       </span>
-                      <span className="text-xs uppercase tracking-wider block font-black text-white mt-0.5">
+                      <span className="text-xs uppercase tracking-wider block font-black text-white mt-1 leading-none">
                         View Basket
                       </span>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-2 font-bold text-white pr-1">
-                    <span className="text-lg font-black tracking-tight">₹{cartItemSummary.grandRupeeTotal.toFixed(2)}</span>
-                    <ArrowRight className="w-4.5 h-4.5 text-white" />
+                  <div className="flex items-center gap-1.5 font-bold text-white pr-0.5">
+                    <span className="text-base font-black tracking-tight">₹{cartItemSummary.grandRupeeTotal.toFixed(2)}</span>
+                    <ArrowRight className="w-4 h-4 text-white" />
                   </div>
                 </div>
 
@@ -452,7 +452,7 @@ export default function App() {
 
                 {/* Bottom Row: Custom Gujarati Banner with No Hand Signs */}
                 <div className="text-center">
-                  <span className="text-xs font-bold text-green-50 tracking-wide block leading-normal">
+                  <span className="text-[10.5px] font-bold text-green-50 tracking-wide block leading-none">
                     તમારો order Parshv Food's ને મોકલવા અહીંયા ક્લિક કરો.
                   </span>
                 </div>
