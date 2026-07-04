@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingBag, ArrowRight } from 'lucide-react';
+import { ShoppingBag, ArrowRight, ShoppingCart } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 // Modular files imports
@@ -27,6 +27,39 @@ export default function App() {
   
   const [isCartOpen, setIsCartOpen] = React.useState(false);
   const [isProfileOpen, setIsProfileOpen] = React.useState(false);
+
+  // Scroll detection to toggle visibility of floating basket widget at the end of the vegetable list
+  const [isBottomVisible, setIsBottomVisible] = React.useState(false);
+  const bottomRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    setIsBottomVisible(false);
+  }, [activeTab]);
+
+  React.useEffect(() => {
+    if (activeTab !== 'home') return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsBottomVisible(entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0.05, // Trigger when even a tiny bit of the sentinel/button area is in viewport
+      }
+    );
+
+    const currentRef = bottomRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [activeTab]);
 
   // Load profile details from client-side local storage safely on load
   const [profile, setProfile] = React.useState<Profile>(() => {
@@ -346,6 +379,21 @@ export default function App() {
                       ))
                     )}
                   </div>
+
+                  {/* Sentinel container for static orange button / scroll detection */}
+                  <div ref={bottomRef} className="w-full">
+                    {cartItemSummary.distinctTypes > 0 && (
+                      <div className="mt-8 mb-4 max-w-sm mx-auto px-4">
+                        <button
+                          onClick={() => setIsCartOpen(true)}
+                          className="w-full bg-[#FF9800] hover:bg-[#F57C00] text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2.5 shadow-[0_4px_15px_rgba(255,152,0,0.35)] active:scale-[0.98] transition-all cursor-pointer border border-[#FFB74D]/30 text-sm tracking-wide"
+                        >
+                          <ShoppingCart className="w-4.5 h-4.5 text-white" />
+                          <span>View Your Order</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </main>
               </motion.div>
             )}
@@ -413,7 +461,7 @@ export default function App() {
 
         {/* [L] Interactive Floating Basket widget (Optimized and highly polished) */}
         <AnimatePresence>
-          {cartItemSummary.distinctTypes > 0 && !isCartOpen && activeTab !== 'orders' && (
+          {cartItemSummary.distinctTypes > 0 && !isCartOpen && activeTab !== 'orders' && !isBottomVisible && (
             <motion.div
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
