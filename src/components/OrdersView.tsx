@@ -116,19 +116,33 @@ export default function OrdersView({
 
                   {/* Order items miniature listing */}
                   <div className="flex flex-col gap-1.5 py-1">
-                    {order.items.map((item, index) => (
-                      <div key={index} className="flex items-center justify-between text-xs font-semibold text-gray-650">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-sm">{item.emoji}</span>
-                          <span>
-                            {item.gujaratiName} <span className="text-[10px] font-normal text-gray-400">({item.englishName})</span>
+                    {order.items.map((item, index) => {
+                      const productObj = products.find(p => p.id === item.productId);
+                      return (
+                        <div key={index} className="flex items-center justify-between text-xs font-semibold text-gray-650">
+                          <div className="flex items-center gap-1.5">
+                            {productObj?.image ? (
+                              <div className="w-5 h-5 rounded-full overflow-hidden flex items-center justify-center bg-[#EAF6EA] border border-green-200/50">
+                                <img
+                                  src={productObj.image}
+                                  alt={item.englishName}
+                                  className="w-full h-full object-cover"
+                                  referrerPolicy="no-referrer"
+                                />
+                              </div>
+                            ) : (
+                              <span className="text-sm">{item.emoji}</span>
+                            )}
+                            <span>
+                              {item.gujaratiName} <span className="text-[10px] font-normal text-gray-400">({item.englishName})</span>
+                            </span>
+                          </div>
+                          <span className="text-gray-850 font-bold uppercase">
+                            {item.quantity} {item.unit}
                           </span>
                         </div>
-                        <span className="text-gray-850 font-bold uppercase">
-                          {item.quantity} {item.unit}
-                        </span>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
                   {/* Total and Re-Order action panel */}

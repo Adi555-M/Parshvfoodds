@@ -177,9 +177,18 @@ export default function CartDrawer({
                     <div className="flex items-center gap-3 flex-1 min-w-0 pr-2">
                       <div
                         style={{ backgroundColor: item.product.bgColor }}
-                        className="w-11 h-11 border border-gray-100 flex items-center justify-center text-xl shadow-xs flex-shrink-0 rounded-xl"
+                        className="w-11 h-11 border border-gray-100 flex items-center justify-center text-xl shadow-xs flex-shrink-0 rounded-xl overflow-hidden"
                       >
-                        {item.product.emoji}
+                        {item.product.image ? (
+                          <img
+                            src={item.product.image}
+                            alt={item.product.englishName}
+                            className="w-full h-full object-cover rounded-xl"
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : (
+                          item.product.emoji
+                        )}
                       </div>
                       <div className="text-left truncate">
                         <h4 className="text-xs font-bold text-gray-800 leading-tight">

@@ -131,9 +131,18 @@ export default function ProductCard({
       <div className="flex justify-center items-center py-4">
         <motion.div
           whileHover={{ scale: 1.05 }}
-          className="w-20 h-20 sm:w-22 sm:h-22 rounded-full bg-[#EAF6EA] flex items-center justify-center text-4xl sm:text-5xl shadow-sm border border-[#C8EBC8]/30"
+          className="w-20 h-20 sm:w-22 sm:h-22 rounded-full bg-[#EAF6EA] flex items-center justify-center text-4xl sm:text-5xl shadow-sm border border-[#C8EBC8]/30 overflow-hidden"
         >
-          {product.emoji}
+          {product.image ? (
+            <img
+              src={product.image}
+              alt={product.englishName}
+              className="w-full h-full object-cover rounded-full"
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            product.emoji
+          )}
         </motion.div>
       </div>
 

@@ -1,4 +1,5 @@
 import { Product } from './types';
+import okraImg from './assets/images/okra_product_image_1783690436508.jpg';
 
 export const PRODUCTS: Product[] = [
   {
@@ -50,6 +51,7 @@ export const PRODUCTS: Product[] = [
     category: 'Organic',
     badge: '100% Organic',
     emoji: '🌿',
+    image: okraImg,
     bgColor: '#F2FBF2', // Mint green
     benefit: 'High in fiber to promote healthy digestion',
   },

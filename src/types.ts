@@ -8,6 +8,7 @@ export interface Product {
   category: string; // 'Leafy' | 'Root' | 'Seasonal' | 'Organic' | 'Fruits'
   badge: string;
   emoji: string;
+  image?: string;
   bgColor: string;
   benefit?: string;
   isMarketPrice?: boolean;
