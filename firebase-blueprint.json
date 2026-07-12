@@ -1,0 +1,10 @@
+{
+  "collections": {
+    "product_overrides": {
+      "id": { "type": "string", "description": "The product ID" },
+      "image": { "type": "string", "description": "Base64 encoded image or image URL" },
+      "price": { "type": "number", "description": "Custom overridden price" },
+      "updatedAt": { "type": "string", "description": "ISO Timestamp of when the override was saved" }
+    }
+  }
+}

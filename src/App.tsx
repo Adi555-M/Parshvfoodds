@@ -17,12 +17,13 @@ import OrdersView from './components/OrdersView';
 
 import { PRODUCTS } from './data';
 import { Profile, HistoricalOrder, Product } from './types';
+import { db, collection, doc, onSnapshot, setDoc } from './firebase';
 
 export default function App() {
   // 1. Core Reactive States
   const [cart, setCart] = React.useState<Record<string, number>>({});
   
-  // Stateful vegetable list to allow photo upload & price changes in Admin mode
+  // Stateful vegetable list to allow photo upload & price changes in Admin mode (fallback to localStorage on init)
   const [productsList, setProductsList] = React.useState<Product[]>(() => {
     try {
       const stored = localStorage.getItem('pf_custom_products');
@@ -46,12 +47,51 @@ export default function App() {
     return PRODUCTS;
   });
 
+  // Real-time Cloud Synchronization with Firestore
+  React.useEffect(() => {
+    const colRef = collection(db, 'product_overrides');
+    const unsubscribe = onSnapshot(colRef, (snapshot) => {
+      const overridesMap: Record<string, { image?: string; price?: number }> = {};
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        overridesMap[docSnap.id] = {
+          image: data.image,
+          price: typeof data.price === 'number' ? data.price : undefined,
+        };
+      });
+
+      setProductsList((prev) => {
+        const updated = PRODUCTS.map((p) => {
+          const override = overridesMap[p.id];
+          if (override) {
+            return {
+              ...p,
+              image: override.image !== undefined ? override.image : p.image,
+              price: override.price !== undefined ? override.price : p.price,
+            };
+          }
+          return p;
+        });
+        // Save to localStorage as quick local backup
+        try {
+          localStorage.setItem('pf_custom_products', JSON.stringify(updated));
+        } catch (e) {
+          console.error(e);
+        }
+        return updated;
+      });
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const [isAdminMode, setIsAdminMode] = React.useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = React.useState(false);
   const [adminPasswordInput, setAdminPasswordInput] = React.useState('');
   const [passwordError, setPasswordError] = React.useState('');
 
-  const handleUpdateProductImage = (productId: string, base64Data: string) => {
+  const handleUpdateProductImage = async (productId: string, base64Data: string) => {
+    // 1. Optimistic Local Update
     setProductsList((prev) => {
       const updated = prev.map((p) => {
         if (p.id === productId) {
@@ -66,9 +106,18 @@ export default function App() {
       }
       return updated;
     });
+
+    // 2. Persist to Firestore in Realtime
+    try {
+      const docRef = doc(db, 'product_overrides', productId);
+      await setDoc(docRef, { image: base64Data, updatedAt: new Date().toISOString() }, { merge: true });
+    } catch (e) {
+      console.error('Failed to update product image in Firestore', e);
+    }
   };
 
-  const handleUpdateProductPrice = (productId: string, newPrice: number) => {
+  const handleUpdateProductPrice = async (productId: string, newPrice: number) => {
+    // 1. Optimistic Local Update
     setProductsList((prev) => {
       const updated = prev.map((p) => {
         if (p.id === productId) {
@@ -83,6 +132,14 @@ export default function App() {
       }
       return updated;
     });
+
+    // 2. Persist to Firestore in Realtime
+    try {
+      const docRef = doc(db, 'product_overrides', productId);
+      await setDoc(docRef, { price: newPrice, updatedAt: new Date().toISOString() }, { merge: true });
+    } catch (e) {
+      console.error('Failed to update product price in Firestore', e);
+    }
   };
   const [selectedUnits, setSelectedUnits] = React.useState<Record<string, 'KG' | 'GRAM' | 'DOZEN'>>({});
   const [searchQuery, setSearchQuery] = React.useState('');
