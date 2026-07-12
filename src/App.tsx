@@ -22,16 +22,22 @@ export default function App() {
   // 1. Core Reactive States
   const [cart, setCart] = React.useState<Record<string, number>>({});
   
-  // Stateful vegetable list to allow photo upload in Admin mode
+  // Stateful vegetable list to allow photo upload & price changes in Admin mode
   const [productsList, setProductsList] = React.useState<Product[]>(() => {
     try {
       const stored = localStorage.getItem('pf_custom_products');
       if (stored) {
         const parsed = JSON.parse(stored);
-        // Merge stored base64 images into imported PRODUCTS list
+        // Merge stored base64 images and custom prices into imported PRODUCTS list
         return PRODUCTS.map((p) => {
           const custom = parsed.find((item: any) => item.id === p.id);
-          return custom ? { ...p, image: custom.image || p.image } : p;
+          return custom
+            ? {
+                ...p,
+                image: custom.image || p.image,
+                price: typeof custom.price === 'number' ? custom.price : p.price,
+              }
+            : p;
         });
       }
     } catch (e) {
@@ -57,6 +63,23 @@ export default function App() {
         localStorage.setItem('pf_custom_products', JSON.stringify(updated));
       } catch (e) {
         console.error('Failed to save updated product image to localStorage', e);
+      }
+      return updated;
+    });
+  };
+
+  const handleUpdateProductPrice = (productId: string, newPrice: number) => {
+    setProductsList((prev) => {
+      const updated = prev.map((p) => {
+        if (p.id === productId) {
+          return { ...p, price: newPrice };
+        }
+        return p;
+      });
+      try {
+        localStorage.setItem('pf_custom_products', JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to save updated product price to localStorage', e);
       }
       return updated;
     });
@@ -399,6 +422,7 @@ export default function App() {
                           onUnitChange={(unit) => handleUnitChange(product.id, unit)}
                           isAdminMode={isAdminMode}
                           onUpdateImage={handleUpdateProductImage}
+                          onUpdatePrice={handleUpdateProductPrice}
                         />
                       ))
                     )}
@@ -507,7 +531,7 @@ export default function App() {
                   setPasswordError('');
                   setAdminPasswordInput('');
                 }}
-                className="absolute inset-0 bg-black/60 backdrop-blur-xs"
+                className="absolute inset-0 bg-black/60 backdrop-blur-xs animate-none"
               />
 
               <motion.div
@@ -522,7 +546,7 @@ export default function App() {
 
                 <h3 className="text-base font-black text-gray-800 uppercase tracking-wider">Parshv Foods Admin Desk</h3>
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mt-1">
-                  Access to update vegetable pictures
+                  Access to update vegetable pictures & prices
                 </p>
 
                 <form
@@ -559,10 +583,6 @@ export default function App() {
                       ⚠️ {passwordError}
                     </p>
                   )}
-
-                  <div className="text-[10px] text-gray-400 font-semibold mt-3 text-center bg-gray-50 py-1.5 rounded-lg border border-gray-100">
-                    💡 Hint: Enter <span className="font-bold text-green-600">admin</span> or <span className="font-bold text-green-600">1234</span>
-                  </div>
 
                   <div className="grid grid-cols-2 gap-3 mt-5">
                     <button

@@ -13,6 +13,7 @@ interface ProductCardProps {
   onUnitChange: (unit: 'KG' | 'GRAM' | 'DOZEN') => void;
   isAdminMode?: boolean;
   onUpdateImage?: (productId: string, base64Data: string) => void;
+  onUpdatePrice?: (productId: string, price: number) => void;
 }
 
 export default function ProductCard({
@@ -23,6 +24,7 @@ export default function ProductCard({
   onUnitChange,
   isAdminMode = false,
   onUpdateImage,
+  onUpdatePrice,
 }: ProductCardProps) {
   const [lastAction, setLastAction] = React.useState<'added' | 'removed' | null>(null);
   const [showIndicator, setShowIndicator] = React.useState(false);
@@ -200,9 +202,31 @@ export default function ProductCard({
         <p className="text-xs text-gray-400 font-medium mt-1">
           ({product.englishName})
         </p>
-        <span className="inline-block mt-2 font-bold text-xs text-[#2E7D32]">
-          {getPriceLabel()}
-        </span>
+        {isAdminMode ? (
+          <div className="mt-1 flex items-center gap-1">
+            <span className="text-xs font-bold text-gray-500">Price: ₹</span>
+            <input
+              type="number"
+              value={product.price}
+              onChange={(e) => {
+                const val = parseFloat(e.target.value);
+                if (!isNaN(val) && val >= 0) {
+                  onUpdatePrice?.(product.id, val);
+                } else if (e.target.value === '') {
+                  onUpdatePrice?.(product.id, 0);
+                }
+              }}
+              className="w-16 px-1 py-0.5 text-xs font-bold text-[#2E7D32] bg-green-50 border border-green-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500"
+            />
+            <span className="text-[10px] font-semibold text-gray-400">
+              /{product.baseUnit.toLowerCase()}
+            </span>
+          </div>
+        ) : (
+          <span className="inline-block mt-2 font-bold text-xs text-[#2E7D32]">
+            {getPriceLabel()}
+          </span>
+        )}
       </div>
 
       {/* Controls box (strictly curved borders) */}
