@@ -16,11 +16,51 @@ import ContactView from './components/ContactView';
 import OrdersView from './components/OrdersView';
 
 import { PRODUCTS } from './data';
-import { Profile, HistoricalOrder } from './types';
+import { Profile, HistoricalOrder, Product } from './types';
 
 export default function App() {
   // 1. Core Reactive States
   const [cart, setCart] = React.useState<Record<string, number>>({});
+  
+  // Stateful vegetable list to allow photo upload in Admin mode
+  const [productsList, setProductsList] = React.useState<Product[]>(() => {
+    try {
+      const stored = localStorage.getItem('pf_custom_products');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        // Merge stored base64 images into imported PRODUCTS list
+        return PRODUCTS.map((p) => {
+          const custom = parsed.find((item: any) => item.id === p.id);
+          return custom ? { ...p, image: custom.image || p.image } : p;
+        });
+      }
+    } catch (e) {
+      console.error('Failed to load custom products list', e);
+    }
+    return PRODUCTS;
+  });
+
+  const [isAdminMode, setIsAdminMode] = React.useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = React.useState(false);
+  const [adminPasswordInput, setAdminPasswordInput] = React.useState('');
+  const [passwordError, setPasswordError] = React.useState('');
+
+  const handleUpdateProductImage = (productId: string, base64Data: string) => {
+    setProductsList((prev) => {
+      const updated = prev.map((p) => {
+        if (p.id === productId) {
+          return { ...p, image: base64Data };
+        }
+        return p;
+      });
+      try {
+        localStorage.setItem('pf_custom_products', JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to save updated product image to localStorage', e);
+      }
+      return updated;
+    });
+  };
   const [selectedUnits, setSelectedUnits] = React.useState<Record<string, 'KG' | 'GRAM' | 'DOZEN'>>({});
   const [searchQuery, setSearchQuery] = React.useState('');
   const [activeTab, setActiveTab] = React.useState<'home' | 'about' | 'contact' | 'orders'>('home');
@@ -127,7 +167,7 @@ export default function App() {
       const quantityNum = qty as number;
       if (quantityNum <= 0) return;
       distinctTypes += 1;
-      const product = PRODUCTS.find((p) => p.id === id);
+      const product = productsList.find((p) => p.id === id);
       if (!product) return;
 
       const unit = selectedUnits[id] || 'KG';
@@ -145,17 +185,17 @@ export default function App() {
       distinctTypes,
       grandRupeeTotal,
     };
-  }, [cart, selectedUnits]);
+  }, [cart, selectedUnits, productsList]);
 
   // Filter products ONLY by queries (removed category tags as requested)
   const filteredProducts = React.useMemo(() => {
-    return PRODUCTS.filter((product) => {
+    return productsList.filter((product) => {
       return (
         product.englishName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.gujaratiName.toLowerCase().includes(searchQuery.toLowerCase())
       );
     });
-  }, [searchQuery]);
+  }, [searchQuery, productsList]);
 
   // WhatsApp Message Generator / Submission (opens WhatsApp directly)
   const handleCheckout = () => {
@@ -172,7 +212,7 @@ export default function App() {
     Object.entries(cart).forEach(([id, qty]) => {
       const quantityNum = qty as number;
       if (quantityNum <= 0) return;
-      const product = PRODUCTS.find((p) => p.id === id);
+      const product = productsList.find((p) => p.id === id);
       if (!product) return;
 
       const unit = selectedUnits[id] || (product.baseUnit as 'KG' | 'GRAM' | 'DOZEN');
@@ -237,7 +277,7 @@ export default function App() {
     // 2. Format final precompiled text message
     const hasMarketPriceItems = Object.entries(cart).some(([id, qty]) => {
       if ((qty as number) <= 0) return false;
-      const product = PRODUCTS.find((p) => p.id === id);
+      const product = productsList.find((p) => p.id === id);
       return product?.isMarketPrice || false;
     });
 
@@ -292,6 +332,21 @@ export default function App() {
             setActiveTab={setActiveTab}
           />
 
+          {isAdminMode && (
+            <div className="bg-green-600 text-white text-xs py-2.5 px-4 flex items-center justify-between font-bold shadow-md select-none sticky top-14 z-30 transition-all border-b border-green-700">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
+                <span>🔓 Admin Mode Active: Click on any vegetable's square card icon to upload and replace its photo!</span>
+              </div>
+              <button
+                onClick={() => setIsAdminMode(false)}
+                className="px-2.5 py-1 bg-white/25 hover:bg-white/40 text-white text-[10px] uppercase font-bold rounded-lg tracking-wider transition-all cursor-pointer"
+              >
+                Exit
+              </button>
+            </div>
+          )}
+
           {/* VIEW ROUTER FOR SEPARATED PAGES */}
           <AnimatePresence mode="wait">
             {activeTab === 'home' && (
@@ -342,6 +397,8 @@ export default function App() {
                           unit={selectedUnits[product.id] || (product.baseUnit as 'KG' | 'GRAM' | 'DOZEN')}
                           onQuantityChange={(qty) => handleQuantityChange(product.id, qty)}
                           onUnitChange={(unit) => handleUnitChange(product.id, unit)}
+                          isAdminMode={isAdminMode}
+                          onUpdateImage={handleUpdateProductImage}
                         />
                       ))
                     )}
@@ -385,7 +442,7 @@ export default function App() {
                 <OrdersView
                   cart={cart}
                   selectedUnits={selectedUnits}
-                  products={PRODUCTS}
+                  products={productsList}
                   profile={profile}
                   onEditProfile={() => setIsProfileOpen(true)}
                   onBrowseHome={() => setActiveTab('home')}
@@ -409,7 +466,128 @@ export default function App() {
               window.open(`https://wa.me/916355532061?text=${text}`, '_blank', 'noopener,noreferrer');
             }}
           />
+
+          {/* Bottom Admin Desk Button */}
+          <div className="w-full flex justify-center py-6 bg-gray-50 border-t border-gray-100">
+            <button
+              onClick={() => {
+                if (isAdminMode) {
+                  setIsAdminMode(false);
+                } else {
+                  setIsPasswordModalOpen(true);
+                }
+              }}
+              className="flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-gray-100 text-gray-700 hover:text-gray-900 border border-gray-200 rounded-xl shadow-xs text-xs font-bold transition-all cursor-pointer select-none font-sans"
+            >
+              {isAdminMode ? (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span>Admin Mode: Active (Click to Logout)</span>
+                </>
+              ) : (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-gray-300" />
+                  <span>Admin Desk</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
+
+        {/* Password Modal */}
+        <AnimatePresence>
+          {isPasswordModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => {
+                  setIsPasswordModalOpen(false);
+                  setPasswordError('');
+                  setAdminPasswordInput('');
+                }}
+                className="absolute inset-0 bg-black/60 backdrop-blur-xs"
+              />
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                className="bg-white rounded-2xl p-6 shadow-2xl border border-gray-100 max-w-sm w-full relative z-10 text-center select-none font-sans"
+              >
+                <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-3 border border-green-100">
+                  <span className="text-xl">🔑</span>
+                </div>
+
+                <h3 className="text-base font-black text-gray-800 uppercase tracking-wider">Parshv Foods Admin Desk</h3>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mt-1">
+                  Access to update vegetable pictures
+                </p>
+
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (adminPasswordInput === 'admin' || adminPasswordInput === '1234') {
+                      setIsAdminMode(true);
+                      setIsPasswordModalOpen(false);
+                      setAdminPasswordInput('');
+                      setPasswordError('');
+                    } else {
+                      setPasswordError('Incorrect password! Try again.');
+                    }
+                  }}
+                  className="mt-5 text-left"
+                >
+                  <label className="block text-[9px] font-black uppercase tracking-wider text-gray-450 mb-1.5">
+                    Enter Admin Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    value={adminPasswordInput}
+                    onChange={(e) => {
+                      setAdminPasswordInput(e.target.value);
+                      setPasswordError('');
+                    }}
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all"
+                    autoFocus
+                  />
+
+                  {passwordError && (
+                    <p className="text-[10px] text-red-500 font-bold uppercase tracking-wide mt-2 text-center">
+                      ⚠️ {passwordError}
+                    </p>
+                  )}
+
+                  <div className="text-[10px] text-gray-400 font-semibold mt-3 text-center bg-gray-50 py-1.5 rounded-lg border border-gray-100">
+                    💡 Hint: Enter <span className="font-bold text-green-600">admin</span> or <span className="font-bold text-green-600">1234</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 mt-5">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsPasswordModalOpen(false);
+                        setPasswordError('');
+                        setAdminPasswordInput('');
+                      }}
+                      className="py-2.5 px-4 bg-gray-100 hover:bg-gray-150 text-gray-700 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="py-2.5 px-4 bg-[#2E7D32] hover:bg-[#1B5E20] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md shadow-green-700/10 cursor-pointer"
+                    >
+                      Login
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
 
         {/* [L] Interactive Floating Basket widget (Optimized and highly polished) */}
         <AnimatePresence>
@@ -479,7 +657,7 @@ export default function App() {
               isOpen={isCartOpen}
               cart={cart}
               selectedUnits={selectedUnits}
-              products={PRODUCTS}
+              products={productsList}
               profile={profile}
               onClose={() => setIsCartOpen(false)}
               onCheckout={handleCheckout}

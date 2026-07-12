@@ -11,6 +11,8 @@ interface ProductCardProps {
   unit: 'KG' | 'GRAM' | 'DOZEN';
   onQuantityChange: (qty: number) => void;
   onUnitChange: (unit: 'KG' | 'GRAM' | 'DOZEN') => void;
+  isAdminMode?: boolean;
+  onUpdateImage?: (productId: string, base64Data: string) => void;
 }
 
 export default function ProductCard({
@@ -19,6 +21,8 @@ export default function ProductCard({
   unit,
   onQuantityChange,
   onUnitChange,
+  isAdminMode = false,
+  onUpdateImage,
 }: ProductCardProps) {
   const [lastAction, setLastAction] = React.useState<'added' | 'removed' | null>(null);
   const [showIndicator, setShowIndicator] = React.useState(false);
@@ -129,21 +133,63 @@ export default function ProductCard({
 
       {/* Vegetable Icon Illustration Wrapper (Curved Circular Stamps) */}
       <div className="flex justify-center items-center py-4">
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          className="w-20 h-20 sm:w-22 sm:h-22 rounded-full bg-[#EAF6EA] flex items-center justify-center text-4xl sm:text-5xl shadow-sm border border-[#C8EBC8]/30 overflow-hidden"
-        >
-          {product.image ? (
-            <img
-              src={product.image}
-              alt={product.englishName}
-              className="w-full h-full object-cover rounded-full"
-              referrerPolicy="no-referrer"
+        {isAdminMode ? (
+          <label className="relative cursor-pointer group block">
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file && onUpdateImage) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    if (typeof reader.result === 'string') {
+                      onUpdateImage(product.id, reader.result);
+                    }
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
             />
-          ) : (
-            product.emoji
-          )}
-        </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-green-50 flex flex-col items-center justify-center text-4xl sm:text-5xl shadow-md border-2 border-dashed border-green-500 overflow-hidden relative"
+            >
+              {product.image ? (
+                <img
+                  src={product.image}
+                  alt={product.englishName}
+                  className="w-full h-full object-cover rounded-2xl opacity-75 group-hover:opacity-40 transition-opacity"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <span className="opacity-75 group-hover:opacity-40 transition-opacity">{product.emoji}</span>
+              )}
+              {/* Camera Icon Overlay */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
+                <span className="text-[9px] text-white font-black tracking-widest uppercase">Upload</span>
+                <span className="text-[8px] text-green-300 font-bold uppercase mt-0.5">Photo</span>
+              </div>
+            </motion.div>
+          </label>
+        ) : (
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-[#EAF6EA] flex items-center justify-center text-4xl sm:text-5xl shadow-sm border border-[#C8EBC8]/30 overflow-hidden"
+          >
+            {product.image ? (
+              <img
+                src={product.image}
+                alt={product.englishName}
+                className="w-full h-full object-cover rounded-2xl"
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              product.emoji
+            )}
+          </motion.div>
+        )}
       </div>
 
       {/* Main product identifiers - min-h guarantees alignment across grids */}

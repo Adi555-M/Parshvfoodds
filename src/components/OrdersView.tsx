@@ -122,11 +122,11 @@ export default function OrdersView({
                         <div key={index} className="flex items-center justify-between text-xs font-semibold text-gray-650">
                           <div className="flex items-center gap-1.5">
                             {productObj?.image ? (
-                              <div className="w-5 h-5 rounded-full overflow-hidden flex items-center justify-center bg-[#EAF6EA] border border-green-200/50">
+                              <div className="w-5 h-5 rounded-md overflow-hidden flex items-center justify-center bg-[#EAF6EA] border border-green-200/50">
                                 <img
                                   src={productObj.image}
                                   alt={item.englishName}
-                                  className="w-full h-full object-cover"
+                                  className="w-full h-full object-cover rounded-md"
                                   referrerPolicy="no-referrer"
                                 />
                               </div>
