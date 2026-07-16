@@ -115,10 +115,10 @@ export default function Sections({
       )}
 
       <footer id="pf-global-footer" className="w-full bg-[#2E7D32] text-white pt-6 pb-6 px-4 select-none text-left rounded-t-3xl shadow-inner mt-8">
-        <div className="max-w-lg md:max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto flex flex-col gap-4 md:gap-8">
+        <div className="max-w-lg md:max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto flex flex-col gap-3 md:gap-6">
           
           {/* Main Footer columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
             {/* Logo & Info */}
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2">
@@ -209,7 +209,7 @@ export default function Sections({
             </div>
           </div>
 
-          <hr className="border-green-800/60 mt-2 mb-2" />
+          <hr className="border-green-800/60 mt-1 mb-1" />
 
           {/* Copyright details footer */}
           <div className="flex flex-col gap-1 text-[11px] text-green-200/80 font-medium select-none">

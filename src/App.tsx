@@ -29,18 +29,19 @@ export default function App() {
       const stored = localStorage.getItem('pf_custom_products');
       if (stored) {
         const parsed = JSON.parse(stored);
-        // Merge stored custom prices into imported PRODUCTS list.
-        // We load only prices from localStorage to avoid storing heavy Base64 image data in localStorage.
+        // Merge stored custom prices and custom compressed images into the base PRODUCTS list.
         return PRODUCTS.map((p) => {
           const custom = parsed.find((item: any) => item.id === p.id);
-          const hasOverridePrice = custom && typeof custom.price === 'number';
-          return custom
-            ? {
-                ...p,
-                price: hasOverridePrice ? custom.price : p.price,
-                isMarketPrice: hasOverridePrice ? false : p.isMarketPrice,
-              }
-            : p;
+          if (custom) {
+            const hasOverridePrice = typeof custom.price === 'number';
+            return {
+              ...p,
+              image: custom.image || p.image,
+              price: hasOverridePrice ? custom.price : p.price,
+              isMarketPrice: hasOverridePrice ? false : p.isMarketPrice,
+            };
+          }
+          return p;
         });
       }
     } catch (e) {
@@ -52,43 +53,58 @@ export default function App() {
   // Real-time Cloud Synchronization with Firestore
   React.useEffect(() => {
     const colRef = collection(db, 'product_overrides');
-    const unsubscribe = onSnapshot(colRef, (snapshot) => {
-      const overridesMap: Record<string, { image?: string; price?: number }> = {};
-      snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        overridesMap[docSnap.id] = {
-          image: data.image,
-          price: typeof data.price === 'number' ? data.price : undefined,
-        };
-      });
-
-      setProductsList((prev) => {
-        const updated = PRODUCTS.map((p) => {
-          const override = overridesMap[p.id];
-          if (override) {
-            const hasOverridePrice = override.price !== undefined;
-            return {
-              ...p,
-              image: override.image !== undefined ? override.image : p.image,
-              price: hasOverridePrice ? override.price : p.price,
-              isMarketPrice: hasOverridePrice ? false : p.isMarketPrice,
-            };
-          }
-          return p;
+    const unsubscribe = onSnapshot(colRef, 
+      (snapshot) => {
+        const overridesMap: Record<string, { image?: string; price?: number }> = {};
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          overridesMap[docSnap.id] = {
+            image: data.image,
+            price: typeof data.price === 'number' ? data.price : undefined,
+          };
         });
-        // Save to localStorage as quick local backup (store only lightweight price overrides to prevent QuotaExceededError)
-        try {
-          const lightweightOverrides = updated.map((p) => ({
-            id: p.id,
-            price: p.price,
-          }));
-          localStorage.setItem('pf_custom_products', JSON.stringify(lightweightOverrides));
-        } catch (e) {
-          console.error('Failed to update local storage backup', e);
-        }
-        return updated;
-      });
-    });
+
+        setProductsList((prev) => {
+          const updated = PRODUCTS.map((p) => {
+            const override = overridesMap[p.id];
+            if (override) {
+              const hasOverridePrice = override.price !== undefined;
+              return {
+                ...p,
+                image: override.image !== undefined ? override.image : p.image,
+                price: hasOverridePrice ? override.price : p.price,
+                isMarketPrice: hasOverridePrice ? false : p.isMarketPrice,
+              };
+            }
+            return p;
+          });
+          // Save to localStorage as quick local backup (store custom prices and compressed custom images)
+          try {
+            const lightweightOverrides = updated.map((p) => {
+              const item: any = { id: p.id };
+              const original = PRODUCTS.find((orig) => orig.id === p.id);
+              if (p.price !== undefined) {
+                item.price = p.price;
+              }
+              if (original && p.image && p.image !== original.image) {
+                item.image = p.image;
+              }
+              return item;
+            });
+            localStorage.setItem('pf_custom_products', JSON.stringify(lightweightOverrides));
+          } catch (e) {
+            console.error('Failed to update local storage backup', e);
+          }
+          return updated;
+        });
+      },
+      (error) => {
+        console.warn(
+          'Firestore real-time subscription was paused/failed (likely due to free quota limits or offline status). Falling back to local cache.',
+          error
+        );
+      }
+    );
 
     return () => unsubscribe();
   }, []);
@@ -108,10 +124,17 @@ export default function App() {
         return p;
       });
       try {
-        const lightweightOverrides = updated.map((p) => ({
-          id: p.id,
-          price: p.price,
-        }));
+        const lightweightOverrides = updated.map((p) => {
+          const item: any = { id: p.id };
+          const original = PRODUCTS.find((orig) => orig.id === p.id);
+          if (p.price !== undefined) {
+            item.price = p.price;
+          }
+          if (original && p.image && p.image !== original.image) {
+            item.image = p.image;
+          }
+          return item;
+        });
         localStorage.setItem('pf_custom_products', JSON.stringify(lightweightOverrides));
       } catch (e) {
         console.error('Failed to save updated products list to localStorage', e);
@@ -138,10 +161,17 @@ export default function App() {
         return p;
       });
       try {
-        const lightweightOverrides = updated.map((p) => ({
-          id: p.id,
-          price: p.price,
-        }));
+        const lightweightOverrides = updated.map((p) => {
+          const item: any = { id: p.id };
+          const original = PRODUCTS.find((orig) => orig.id === p.id);
+          if (p.price !== undefined) {
+            item.price = p.price;
+          }
+          if (original && p.image && p.image !== original.image) {
+            item.image = p.image;
+          }
+          return item;
+        });
         localStorage.setItem('pf_custom_products', JSON.stringify(lightweightOverrides));
       } catch (e) {
         console.error('Failed to save updated product price to localStorage', e);
