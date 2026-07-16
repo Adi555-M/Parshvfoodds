@@ -29,20 +29,22 @@ export default function App() {
       const stored = localStorage.getItem('pf_custom_products');
       if (stored) {
         const parsed = JSON.parse(stored);
-        // Merge stored base64 images and custom prices into imported PRODUCTS list
+        // Merge stored custom prices into imported PRODUCTS list.
+        // We load only prices from localStorage to avoid storing heavy Base64 image data in localStorage.
         return PRODUCTS.map((p) => {
           const custom = parsed.find((item: any) => item.id === p.id);
+          const hasOverridePrice = custom && typeof custom.price === 'number';
           return custom
             ? {
                 ...p,
-                image: custom.image || p.image,
-                price: typeof custom.price === 'number' ? custom.price : p.price,
+                price: hasOverridePrice ? custom.price : p.price,
+                isMarketPrice: hasOverridePrice ? false : p.isMarketPrice,
               }
             : p;
         });
       }
     } catch (e) {
-      console.error('Failed to load custom products list', e);
+      console.error('Failed to load custom products list from localStorage', e);
     }
     return PRODUCTS;
   });
@@ -64,19 +66,25 @@ export default function App() {
         const updated = PRODUCTS.map((p) => {
           const override = overridesMap[p.id];
           if (override) {
+            const hasOverridePrice = override.price !== undefined;
             return {
               ...p,
               image: override.image !== undefined ? override.image : p.image,
-              price: override.price !== undefined ? override.price : p.price,
+              price: hasOverridePrice ? override.price : p.price,
+              isMarketPrice: hasOverridePrice ? false : p.isMarketPrice,
             };
           }
           return p;
         });
-        // Save to localStorage as quick local backup
+        // Save to localStorage as quick local backup (store only lightweight price overrides to prevent QuotaExceededError)
         try {
-          localStorage.setItem('pf_custom_products', JSON.stringify(updated));
+          const lightweightOverrides = updated.map((p) => ({
+            id: p.id,
+            price: p.price,
+          }));
+          localStorage.setItem('pf_custom_products', JSON.stringify(lightweightOverrides));
         } catch (e) {
-          console.error(e);
+          console.error('Failed to update local storage backup', e);
         }
         return updated;
       });
@@ -100,9 +108,13 @@ export default function App() {
         return p;
       });
       try {
-        localStorage.setItem('pf_custom_products', JSON.stringify(updated));
+        const lightweightOverrides = updated.map((p) => ({
+          id: p.id,
+          price: p.price,
+        }));
+        localStorage.setItem('pf_custom_products', JSON.stringify(lightweightOverrides));
       } catch (e) {
-        console.error('Failed to save updated product image to localStorage', e);
+        console.error('Failed to save updated products list to localStorage', e);
       }
       return updated;
     });
@@ -126,7 +138,11 @@ export default function App() {
         return p;
       });
       try {
-        localStorage.setItem('pf_custom_products', JSON.stringify(updated));
+        const lightweightOverrides = updated.map((p) => ({
+          id: p.id,
+          price: p.price,
+        }));
+        localStorage.setItem('pf_custom_products', JSON.stringify(lightweightOverrides));
       } catch (e) {
         console.error('Failed to save updated product price to localStorage', e);
       }
@@ -548,30 +564,40 @@ export default function App() {
             }}
           />
 
-          {/* Bottom Admin Desk Button */}
-          <div className="w-full flex justify-center py-6 bg-gray-50 border-t border-gray-100">
-            <button
-              onClick={() => {
-                if (isAdminMode) {
-                  setIsAdminMode(false);
-                } else {
-                  setIsPasswordModalOpen(true);
+          {/* Completely secret hotspot in the bottom-right corner for Admin access */}
+          <div
+            onTouchStart={(e) => {
+              const touch = e.touches[0];
+              (window as any)._adminTouchStart = touch.clientY;
+            }}
+            onTouchEnd={(e) => {
+              const touchStart = (window as any)._adminTouchStart;
+              if (typeof touchStart === 'number') {
+                const touchEnd = e.changedTouches[0].clientY;
+                const diffY = touchStart - touchEnd; // Positive means swiped up
+                if (diffY > 30) {
+                  if (isAdminMode) {
+                    setIsAdminMode(false);
+                  } else {
+                    setIsPasswordModalOpen(true);
+                  }
                 }
-              }}
-              className="flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-gray-100 text-gray-700 hover:text-gray-900 border border-gray-200 rounded-xl shadow-xs text-xs font-bold transition-all cursor-pointer select-none font-sans"
-            >
-              {isAdminMode ? (
-                <>
-                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <span>Admin Mode: Active (Click to Logout)</span>
-                </>
-              ) : (
-                <>
-                  <span className="w-2 h-2 rounded-full bg-gray-300" />
-                  <span>Admin Desk</span>
-                </>
-              )}
-            </button>
+              }
+            }}
+            onClick={() => {
+              if (isAdminMode) {
+                setIsAdminMode(false);
+              } else {
+                setIsPasswordModalOpen(true);
+              }
+            }}
+            className="fixed bottom-0 right-0 w-12 h-12 z-50 cursor-pointer select-none"
+            title="Secret Admin Hotspot"
+          >
+            {/* Subtle faint indicator only when admin mode is active, otherwise completely invisible */}
+            {isAdminMode && (
+              <div className="absolute bottom-2.5 right-2.5 w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-md" />
+            )}
           </div>
         </div>
 

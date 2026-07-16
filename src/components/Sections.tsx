@@ -114,11 +114,11 @@ export default function Sections({
         </section>
       )}
 
-      <footer id="pf-global-footer" className="w-full bg-[#2E7D32] text-white pt-10 pb-8 px-4 select-none text-left rounded-t-3xl shadow-inner mt-8">
-        <div className="max-w-lg md:max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto flex flex-col gap-8">
+      <footer id="pf-global-footer" className="w-full bg-[#2E7D32] text-white pt-6 pb-6 px-4 select-none text-left rounded-t-3xl shadow-inner mt-8">
+        <div className="max-w-lg md:max-w-3xl lg:max-w-5xl xl:max-w-7xl mx-auto flex flex-col gap-4 md:gap-8">
           
           {/* Main Footer columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
             {/* Logo & Info */}
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2">
