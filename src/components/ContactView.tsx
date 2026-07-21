@@ -55,13 +55,15 @@ export default function ContactView() {
               Get daily prices and important announcements directly on WhatsApp.
             </p>
           </div>
-          <button
-            onClick={handleJoinGroup}
+          <a
+            href="https://chat.whatsapp.com/IRGtdbu8u7q2Ur8JktLpUh"
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-full sm:w-auto self-start px-5 py-2.5 bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-bold text-xs uppercase tracking-wider transition-all active:scale-95 cursor-pointer rounded-xl flex items-center justify-center gap-1.5"
           >
             <MessageSquare className="w-4 h-4 text-white" />
             <span>Join WhatsApp Group</span>
-          </button>
+          </a>
         </div>
 
         {/* 2. Descriptive Contact Information cards row */}

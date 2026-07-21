@@ -1,5 +1,5 @@
 import React from 'react';
-import { Leaf, CheckSquare, Users } from 'lucide-react';
+import { CheckSquare } from 'lucide-react';
 import aboutImage from '../assets/images/about_breakfast_bowl_1784626480508.jpg';
 
 export default function AboutView() {
@@ -35,31 +35,6 @@ export default function AboutView() {
           <p className="text-sm font-semibold text-gray-800 leading-relaxed">
             Your trusted source for fresh, high-quality vegetables.
           </p>
-        </div>
-
-        {/* Join Group Section */}
-        <div className="bg-orange-50/60 border border-orange-100 p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 shrink-0 mt-0.5">
-              <Users className="w-5 h-5" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <h4 className="text-sm font-bold text-orange-950">
-                Join Our Updates Group
-              </h4>
-              <p className="text-xs font-medium text-orange-800/95 leading-relaxed max-w-md">
-                Get real-time daily updates on fresh arrivals, early morning market prices, and special offers straight to your phone.
-              </p>
-            </div>
-          </div>
-          <a
-            href="https://chat.whatsapp.com/IRGtdbu8u7q2Ur8JktLpUh"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-1.5 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold rounded-xl shadow-xs transition-all active:scale-95 text-center shrink-0"
-          >
-            Join Group
-          </a>
         </div>
 
         {/* Values Block */}
