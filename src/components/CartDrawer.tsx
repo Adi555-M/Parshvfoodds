@@ -65,10 +65,6 @@ export default function CartDrawer({
     if (item.unit === 'GRAM') {
       return (item.quantity / 1000) * item.product.price;
     }
-    // Mango KG pricing custom configuration
-    if (item.product.id === '5' && item.unit === 'KG') {
-      return item.quantity * 250;
-    }
     return item.quantity * item.product.price;
   };
 
@@ -158,11 +154,7 @@ export default function CartDrawer({
                 const itemCost = getItemCost(item);
                 const priceLabel = item.product.isMarketPrice
                   ? 'Market Price'
-                  : item.product.id === '5'
-                    ? item.unit === 'KG'
-                      ? '₹250/kg'
-                      : `₹${item.product.price}/dozen`
-                    : `₹${item.product.price}/kg`;
+                  : `₹${item.product.price}/${item.product.baseUnit ? item.product.baseUnit.toLowerCase() : 'kg'}`;
 
                 return (
                   <motion.div

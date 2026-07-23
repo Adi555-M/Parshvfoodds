@@ -546,19 +546,6 @@ export const PRODUCTS: Product[] = [
     emoji: '🌿',
     bgColor: '#F2FBF2',
     benefit: 'Ultimate antioxidant source boosting energy levels',
-  },
-  {
-    id: '5',
-    gujaratiName: 'હાફુસ કેરી',
-    englishName: 'Alphonso Mango',
-    price: 750,
-    baseUnit: 'DOZEN',
-    availableUnits: ['DOZEN', 'KG'],
-    category: 'Fruits',
-    badge: 'Sweet & Premium',
-    emoji: '🥭',
-    bgColor: '#FFF8F0', // Peachy cream
-    benefit: 'Rich in Vitamin A, boosts energy & immunity',
   }
 ];
 

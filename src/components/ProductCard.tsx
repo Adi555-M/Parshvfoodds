@@ -61,11 +61,8 @@ export default function ProductCard({
     if (unit === 'GRAM') {
       return (quantity / 1000) * product.price;
     }
-    if (product.id === '5' && unit === 'KG') {
-      return quantity * 250;
-    }
     return quantity * product.price;
-  }, [quantity, unit, product.price, product.id]);
+  }, [quantity, unit, product.price]);
 
   // Adjust quantity increment/decrement
   const handleIncrement = () => {
@@ -120,10 +117,8 @@ export default function ProductCard({
     if (product.isMarketPrice) {
       return "Market Price (બજાર ભાવ)";
     }
-    if (product.id === '5') {
-      return `₹${product.price}/dozen (₹250/kg)`;
-    }
-    return `₹${product.price}/kg`;
+    const unitLabel = product.baseUnit ? product.baseUnit.toLowerCase() : 'kg';
+    return `₹${product.price}/${unitLabel}`;
   };
 
   return (

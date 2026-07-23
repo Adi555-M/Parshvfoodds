@@ -299,9 +299,6 @@ export default function App() {
       const unit = selectedUnits[id] || 'KG';
       if (unit === 'GRAM') {
         grandRupeeTotal += (quantityNum / 1000) * product.price;
-      } else if (product.id === '5' && unit === 'KG') {
-        // Alphonso mango custom KG pricing
-        grandRupeeTotal += quantityNum * 250;
       } else {
         grandRupeeTotal += quantityNum * product.price;
       }
@@ -346,8 +343,6 @@ export default function App() {
 
       if (unit === 'GRAM') {
         rowCost = (quantityNum / 1000) * product.price;
-      } else if (product.id === '5' && unit === 'KG') {
-        rowCost = quantityNum * 250;
       } else {
         rowCost = quantityNum * product.price;
       }
