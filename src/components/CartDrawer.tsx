@@ -201,7 +201,7 @@ export default function CartDrawer({
                         {/* Decrement */}
                         <button
                           onClick={() => {
-                            const step = item.unit === 'GRAM' ? 100 : 1;
+                            const step = item.unit === 'GRAM' ? 250 : 1;
                             const nextVal = item.quantity - step;
                             if (nextVal <= 0) {
                               onRemoveItem(item.product.id);
@@ -222,7 +222,7 @@ export default function CartDrawer({
                         {/* Increment */}
                         <button
                           onClick={() => {
-                            const step = item.unit === 'GRAM' ? 100 : 1;
+                            const step = item.unit === 'GRAM' ? 250 : 1;
                             onQuantityChange(item.product.id, item.quantity + step);
                           }}
                           className="w-6 h-6 border border-gray-150 bg-gray-50 hover:bg-[#2E7D32] hover:text-white flex items-center justify-center transition-colors text-xs font-bold rounded-lg cursor-pointer"

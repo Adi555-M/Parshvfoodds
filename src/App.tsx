@@ -372,17 +372,24 @@ export default function App() {
       return;
     }
 
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+    const formattedTime = now.toLocaleTimeString('en-IN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+    });
+    const formattedDateTime = `${formattedDate}, ${formattedTime}`;
+
     // 1. Persist in Order History
     const newOrder: HistoricalOrder = {
       id: 'PF-' + Math.floor(100000 + Math.random() * 900000),
-      date: new Date().toLocaleString('en-IN', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-      }),
+      date: formattedDateTime,
       items: orderedHistoryItems,
       totalCost: cartItemSummary.grandRupeeTotal,
     };
@@ -413,6 +420,8 @@ export default function App() {
       `👤 Name: ${profile.name.trim()}`,
       `📞 Phone: ${profile.phone.trim()}`,
       `📍 Address: ${profile.address.trim()}`,
+      `📅 Date: ${formattedDate}`,
+      `⏰ Time: ${formattedTime}`,
       '',
       '*Order Details:*',
       ...cropsLines,

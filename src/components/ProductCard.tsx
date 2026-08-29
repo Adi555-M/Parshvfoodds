@@ -74,7 +74,7 @@ export default function ProductCard({
       }
     } else {
       if (unit === 'GRAM') {
-        onQuantityChange(quantity + 100);
+        onQuantityChange(quantity + 250);
       } else {
         onQuantityChange(quantity + 1);
       }
@@ -84,7 +84,7 @@ export default function ProductCard({
   const handleDecrement = () => {
     if (quantity === 0) return;
     if (unit === 'GRAM') {
-      const nextQty = quantity - 100;
+      const nextQty = quantity - 250;
       onQuantityChange(nextQty <= 0 ? 0 : nextQty);
     } else {
       onQuantityChange(quantity - 1 <= 0 ? 0 : quantity - 1);
@@ -105,10 +105,20 @@ export default function ProductCard({
     if (unit === newUnit) return;
     onUnitChange(newUnit);
     if (newUnit === 'GRAM') {
-      onQuantityChange(quantity === 1 ? 1000 : 250);
+      if (quantity === 0) {
+        onQuantityChange(0);
+      } else if (quantity === 1) {
+        onQuantityChange(1000);
+      } else {
+        onQuantityChange(quantity * 1000);
+      }
     } else {
       if (unit === 'GRAM') {
-        onQuantityChange(Math.max(1, Math.round(quantity / 1000)));
+        if (quantity === 0) {
+          onQuantityChange(0);
+        } else {
+          onQuantityChange(Math.max(1, Math.round(quantity / 1000)));
+        }
       }
     }
   };
