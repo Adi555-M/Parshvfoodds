@@ -102,23 +102,19 @@ export default function ProductCard({
 
   // Unit changes helper
   const handleUnitSelect = (newUnit: 'KG' | 'GRAM' | 'DOZEN') => {
-    if (unit === newUnit) return;
-    onUnitChange(newUnit);
-    if (newUnit === 'GRAM') {
-      if (quantity === 0) {
-        onQuantityChange(0);
-      } else if (quantity === 1) {
-        onQuantityChange(1000);
+    if (unit !== newUnit) {
+      onUnitChange(newUnit);
+      if (newUnit === 'GRAM') {
+        onQuantityChange(250);
       } else {
-        onQuantityChange(quantity * 1000);
+        onQuantityChange(1);
       }
-    } else {
-      if (unit === 'GRAM') {
-        if (quantity === 0) {
-          onQuantityChange(0);
-        } else {
-          onQuantityChange(Math.max(1, Math.round(quantity / 1000)));
-        }
+    } else if (quantity === 0) {
+      // If already on this unit but quantity is 0, activate with default starting quantity
+      if (newUnit === 'GRAM') {
+        onQuantityChange(250);
+      } else {
+        onQuantityChange(1);
       }
     }
   };
